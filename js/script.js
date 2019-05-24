@@ -1,11 +1,7 @@
 const boxPerfil = document.querySelector('.maravilhosas__box');
 const botao = document.getElementById('button');
 
-botao.addEventListener("click", (evento) => {
-    const
-})
-
-fetch('https://theblackwomanhistory.firebaseio.com/.json')
+fetch('http://localhost:5001/maravilhosas')
     .then((response) => {
         return response.json();
     })
@@ -32,9 +28,79 @@ fetch('https://theblackwomanhistory.firebaseio.com/.json')
             const nome = document.createElement('p');
             nome.textContent = mulher.title;
             card.appendChild(nome);
+            
+            //Criar Botão de para deletar o card adicionado
+            const buttonDel = document.createElement('button');
+            buttonDel.textContent = '✖';
+            buttonDel.setAttribute('data-id', mulher.id);
+            card.appendChild(buttonDel);
+
+            buttonDel.addEventListener('click', () => {
+                const thisCard = buttonDel.parentElement;
+                const cardPai = thisCard.parentElement;
+
+
+                fetch('http://localhost:5001/maravilhosas', {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application'
+                    },
+                    body: JSON.stringify({
+                        'id': buttonDel.getAttribute('data-id')
+                    })
+                })
+
+
+                .then(() => {
+                    cardPai.removeChild(thisCard)
+                    })
+                .catch((erro) => {
+                        console.log(erro)
+
+                    })
+            })    
         })
         
     })
     .catch((erro) => {
         console.log(erro);
+    })
+
+    //Metodo POST para adicionar nome e imagem
+    botao.addEventListener("click", () => {
+
+        const nome = document.querySelector("#name").value;
+        const endereco = document.querySelector("#enderecoImg").value;
+        console.log(nome, endereco)
+    
+    
+        fetch("http://localhost:5001/maravilhosas",  {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                'title':nome,
+                'metadata': {
+                    'image': {
+                        'url': endereco
+                    }
+                }
+               
+            })
+    
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) =>{
+            console.log(data)
+        
+    
+        })
+        .catch((erro)=>{
+            console.log(erro)
+        }) 
     })
