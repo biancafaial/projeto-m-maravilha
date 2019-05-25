@@ -17,7 +17,7 @@ fetch('http://localhost:5001/maravilhosas')
             img.setAttribute('class','img-responsive');
 
             //comparação caso a imagem seja undefined o else irá definir o png como imagem do card
-            // outro mode de fazer a comparação usando OU seria if (mulher.metadata == undefined || mulher.metadata.image == "")
+            // outro mode de fazer a comparação usando OU if (mulher.metadata == undefined || mulher.metadata.image == "")
             if (mulher.metadata && mulher.metadata.image){
                 img.setAttribute('src', mulher.metadata.image.url);
             } else{
@@ -36,24 +36,24 @@ fetch('http://localhost:5001/maravilhosas')
             card.appendChild(buttonDel);
 
             buttonDel.addEventListener('click', () => {
+                //Criação da contante para o botão poder pagar o card pai
                 const thisCard = buttonDel.parentElement;
                 const cardPai = thisCard.parentElement;
 
-
-                fetch('http://localhost:5001/maravilhosas', {
+                //rederização com o id para poder apagar o card 
+                fetch(`http://localhost:5001/maravilhosas/${mulher.id}`, {
                     method: 'DELETE',
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application'
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        'id': buttonDel.getAttribute('data-id')
-                    })
+                 
                 })
 
 
                 .then(() => {
                     cardPai.removeChild(thisCard)
+                   
                     })
                 .catch((erro) => {
                         console.log(erro)
